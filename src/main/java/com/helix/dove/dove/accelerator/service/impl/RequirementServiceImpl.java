@@ -24,7 +24,7 @@ public class RequirementServiceImpl implements RequirementService {
     public RequirementResponse submitRequirement(RequirementRequest request) {
         // 创建新的需求实体
         Requirement requirement = new Requirement();
-        requirement.setDescription(request.description());
+        requirement.setUserBasicRequriement(request.userBasicRequriement());
         
         // 保存到数据库
         requirementRepository.save(requirement);

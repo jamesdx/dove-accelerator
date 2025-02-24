@@ -13,7 +13,7 @@ public class Requirement {
     private Long id;
 
     @Column(nullable = false, length = 500)
-    private String description;
+    private String userBasicRequriement;
 
     @Column(nullable = false)
     private String status = "PENDING";  // PENDING, PROCESSED, REJECTED
