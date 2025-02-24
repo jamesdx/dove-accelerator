@@ -1,0 +1,1 @@
+ALTER TABLE agents ADD COLUMN ai_provider VARCHAR(50) DEFAULT 'anthropic'; 

@@ -6,17 +6,28 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "requirements")
-public class Requirement {
+@Table(name = "agents")
+public class Agent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_basic_requirement", nullable = false)
-    private String userBasicRequirement;
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
-    private String status = "PENDING";  // PENDING, PROCESSED, REJECTED
+    @Enumerated(EnumType.STRING)
+    private AgentRole role;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AgentStatus status = AgentStatus.IDLE;
+
+    @Column(name = "ai_provider")
+    private String aiProvider = "anthropic"; // 默认使用 Anthropic
+
+    @Column(columnDefinition = "TEXT")
+    private String currentTask;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
