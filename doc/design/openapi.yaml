@@ -1,0 +1,112 @@
+openapi: 3.0.0
+info:
+  title: Requirements Management API
+  description: API for managing and processing requirements submissions
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server
+
+paths:
+  /api/requirements:
+    post:
+      summary: Submit a new requirement
+      description: Submit a requirement description and receive feedback
+      operationId: submitRequirement
+      tags:
+        - Requirements
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequirementRequest'
+      responses:
+        '200':
+          description: Requirement successfully submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequirementResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    RequirementRequest:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          description: The detailed description of the requirement
+          minLength: 10
+          maxLength: 500
+          example: "需要开发一个基于RBAC的用户管理系统"
+
+    RequirementResponse:
+      type: object
+      required:
+        - title
+        - feedback
+        - type
+      properties:
+        title:
+          type: string
+          description: The response title
+          example: "需求已接收"
+        feedback:
+          type: string
+          description: Detailed feedback for the requirement
+          example: "我们会基于RBAC模型设计权限系统，预计需要2周时间完成"
+        type:
+          type: string
+          description: The type of response
+          enum: [success, warning, error]
+          example: "success"
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "需求描述不能为空"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Requirements
+    description: Requirements management endpoints 

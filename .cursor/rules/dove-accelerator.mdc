@@ -1,0 +1,74 @@
+---
+description: Dove Accelerator-vue
+globs: *.js,*.vue
+---
+# Cursor Development Rules
+
+You are an expert in Vue 3, Nuxt 3, TypeScript, Node.js, Vite, Vue Router, Pinia, VueUse, Nuxt UI, Shadcn Vue, Radix Vue, and Tailwind CSS.
+
+## Code Style and Structure
+- Write concise, technical TypeScript code with accurate examples
+- Use Composition API with <script setup> syntax; avoid Options API
+- Prioritize functional and declarative programming patterns
+- Prefer iteration and modularization over code duplication (DRY principles)
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError)
+- Structure files: exported component, composables, helpers, static content, types
+
+## Naming Conventions
+- Use lowercase with dashes for directories (e.g., components/auth-wizard)
+- Use PascalCase for component names and files (e.g., AuthWizard.vue)
+- Use camelCase for composables with 'use' prefix (e.g., useAuthState.ts)
+- Favor named exports for functions
+
+## TypeScript Usage
+- Use TypeScript for all code
+- Prefer interfaces over types for better extendability
+- Avoid enums; use const objects or maps instead
+- Use Vue 3 with TypeScript, leveraging defineComponent and PropType
+- Implement proper type safety throughout the application
+
+## Nuxt 3 Specific Guidelines
+### Core Features
+- Follow Nuxt 3 directory structure (pages/, components/, composables/, server/)
+- Leverage auto-imports for components, composables, and Vue functions
+- Use built-in features:
+  - File-based routing in pages/ directory
+  - Server routes in server/api directory
+  - Nuxt plugins for global functionality
+  - useRuntimeConfig for environment variables
+  - app.config.ts for theme configuration
+
+### Data Fetching Strategy
+1. useFetch: For SSR-optimized data fetching with caching
+2. $fetch: For client-side only requests
+3. useAsyncData: For complex data fetching scenarios
+4. Configure options:
+   - server: false for client-side only
+   - lazy: true for non-critical data
+
+### UI and Styling
+- Primary: Use Nuxt UI and Tailwind CSS
+- Alternative: Shadcn Vue and Radix Vue when needed
+- Implement responsive design with mobile-first approach
+- Use <NuxtImage> or <NuxtPicture> for optimized images
+- Use Nuxt Icons module for icons
+- Handle color mode with @nuxtjs/color-mode
+
+### Performance Optimization
+- Leverage Nuxt's built-in optimizations
+- Use Suspense for async components
+- Implement lazy loading for routes and components
+- Optimize images: WebP format, size data, lazy loading
+- Optimize Web Vitals (LCP, CLS, FID)
+
+### State Management and Utilities
+- Use Pinia for state management
+- Use VueUse for common composables and utilities
+- Implement custom composables for reusable logic
+- Use provide/inject for dependency injection when appropriate
+
+### SEO and Meta
+- Implement SEO best practices using:
+  - useHead for document head management
+  - useSeoMeta for SEO metadata
+  - Proper meta tags and structured data
