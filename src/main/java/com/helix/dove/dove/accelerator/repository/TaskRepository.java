@@ -13,6 +13,7 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByRequirement(Requirement requirement);
     List<Task> findByStatusNot(TaskStatus status);
+    long countByStatusNot(TaskStatus status);
     
     @Query("SELECT t FROM Task t LEFT JOIN FETCH t.assignedAgent WHERE t.status != 'COMPLETED'")
     List<Task> findActiveTasksWithAgents();

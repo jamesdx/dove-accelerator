@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class ProjectManagerAgent {
@@ -97,59 +98,63 @@ public class ProjectManagerAgent {
     private String generatePromptForRequirementAnalysis(String requirement) {
         logger.debug("开始生成需求分析Prompt...");
         String promptForPromptGeneration = String.format("""
-            你是一个经验丰富的项目经理AI助手。现在需要你生成一个Prompt，这个Prompt将用于分析以下需求并生成详细的任务列表：
+            你是一个经验丰富的项目经理AI助手。我需要你分析以下需求并生成任务列表。
             
             需求描述：%s
             
-            请生成一个专业的Prompt，这个Prompt应该：
-            1. 包含项目管理的最佳实践
-            2. 考虑软件开发生命周期的各个阶段
-            3. 确保任务分配合理且覆盖所有必要角色
-            4. 包含任务优先级和依赖关系的考虑
-            5. 考虑质量保证和风险管理
-            6. 确保输出格式符合JSON规范
+            请按照软件开发生命周期(SDLC)的各个阶段，生成详细的任务列表。任务应该包括但不限于：
+            1. 需求分析阶段的任务
+            2. 设计阶段的任务（架构设计、详细设计）
+            3. 开发阶段的任务（后端开发、前端开发）
+            4. 测试阶段的任务（单元测试、集成测试、系统测试）
+            5. 部署和运维阶段的任务
             
-            注意：生成的Prompt必须要求返回的JSON格式包含以下字段：
-            - tasks: 任务列表
-              - title: 任务标题
-              - description: 详细描述
-              - role: 执行角色（PRODUCT_MANAGER/ARCHITECT/DEVELOPER/TESTER/OPERATIONS）
-              - priority: 优先级（LOW/MEDIUM/HIGH/URGENT）
-              - dependencies: 依赖的任务ID列表（可选）
-              - estimatedDuration: 预估工时（可选）
+            请严格按照以下JSON格式返回任务列表，不要包含任何其他解释性文本：
+            {
+              "tasks": [
+                {
+                  "title": "任务标题",
+                  "description": "详细描述",
+                  "role": "执行角色",
+                  "priority": "优先级",
+                  "dependencies": [依赖任务的索引],
+                  "estimatedDuration": 预估工时
+                }
+              ]
+            }
+            
+            必须遵守以下规则：
+            1. role必须是以下之一：PRODUCT_MANAGER, ARCHITECT, DEVELOPER, TESTER, OPERATIONS
+            2. priority必须是以下之一：LOW, MEDIUM, HIGH, URGENT
+            3. dependencies是可选的，表示当前任务依赖的其他任务的索引（从0开始）
+            4. estimatedDuration表示预估工时（小时）
+            5. 每个任务的description应该详细说明任务目标、验收标准和注意事项
+            
+            重要提示：
+            1. 必须返回有效的JSON格式
+            2. 不要在JSON之外添加任何解释或分析
+            3. 确保所有字段的值都符合上述规则
+            4. 确保JSON格式正确，可以被解析
             """, requirement);
-
-        logger.debug("正在使用AI生成Prompt...");
-        
-        // 配置AI调用参数
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("temperature", 0.7);
-        
-        // 根据 AI 提供商类型设置对应的模型
-        String provider = projectManagerAgent.getAiProvider();
-        if ("anthropic".equals(provider)) {
-            parameters.put("model", "claude-3-opus-20240229");
-        } else if ("openai".equals(provider)) {
-            parameters.put("model", "gpt-3.5-turbo");
-        }
-
-        // 获取项目经理的AI提供商并发送请求
-        AIProvider providerObj = getAIProvider(projectManagerAgent);
-        try {
-            String generatedPrompt = providerObj.generateResponse(promptForPromptGeneration, parameters)
-                    .get(); // 等待结果
-            logger.debug("Prompt生成完成，长度: {} 字符", generatedPrompt.length());
-            return generatedPrompt;
-        } catch (Exception e) {
-            logger.error("生成Prompt失败: {}", e.getMessage(), e);
-            throw new RuntimeException("生成Prompt失败: " + e.getMessage());
-        }
+            logger.info("生成需求分析Prompt: {}", promptForPromptGeneration);
+            return promptForPromptGeneration;
     }
 
     @Transactional
     public CompletableFuture<List<Task>> analyzeRequirementAndCreateTasks(Requirement requirement) {
         try {
             logger.info("开始分析需求并创建任务，需求ID: {}", requirement.getId());
+            logger.info("需求内容: {}", requirement.getUserBasicRequirement());
+
+            // 检查数据库连接
+            try {
+                long taskCount = taskRepository.count();
+                logger.info("当前数据库中的任务总数: {}", taskCount);
+            } catch (Exception e) {
+                logger.error("数据库连接检查失败: {}", e.getMessage());
+                throw new RuntimeException("数据库连接失败", e);
+            }
+
             // 更新项目经理状态为工作中
             Agent pmAgent = agentRepository.findById(projectManagerAgent.getId()).orElseThrow();
             pmAgent.setStatus(AgentStatus.WORKING);
@@ -158,7 +163,7 @@ public class ProjectManagerAgent {
             logger.debug("项目经理状态已更新为: {}", pmAgent.getStatus());
 
             // 第一步：生成用于需求分析的Prompt
-            String analysisPrompt = generatePromptForRequirementAnalysis(requirement.getUserBasicRequirement());
+            String prompt = generatePromptForRequirementAnalysis(requirement.getUserBasicRequirement());
             logger.debug("已生成需求分析Prompt，准备调用AI服务...");
 
             // 第二步：使用生成的Prompt进行需求分析
@@ -178,19 +183,31 @@ public class ProjectManagerAgent {
 
             // 获取项目经理的AI提供商并发送请求
             AIProvider providerObj = getAIProvider(projectManagerAgent);
-            String aiResponse = providerObj.generateResponse(analysisPrompt, parameters)
+            String aiResponse = providerObj.generateResponse(prompt, parameters)
                     .get(); // 等待结果
             logger.debug("AI分析完成，响应长度: {} 字符", aiResponse.length());
+            logger.debug("AI原始响应内容: {}", aiResponse);
 
             // 解析AI响应
             logger.debug("开始解析AI响应...");
-            AITaskResponse taskResponse = objectMapper.readValue(aiResponse, AITaskResponse.class);
+            AITaskResponse taskResponse;
+            try {
+                taskResponse = objectMapper.readValue(aiResponse, AITaskResponse.class);
+                logger.info("成功解析AI响应为JSON格式");
+            } catch (Exception e) {
+                logger.error("解析AI响应失败: {}", e.getMessage());
+                logger.error("AI响应内容: {}", aiResponse);
+                throw new RuntimeException("解析AI响应失败: " + e.getMessage());
+            }
             List<Task> createdTasks = new ArrayList<>();
             logger.info("AI分析完成，开始创建任务，任务数量: {}", taskResponse.getTasks().size());
 
             // 为每个任务创建实体并分配给对应的Agent
             for (AITaskResponse.TaskItem taskItem : taskResponse.getTasks()) {
-                logger.debug("正在处理任务: {}", taskItem.getTitle());
+                logger.info("开始处理任务: {}", taskItem.getTitle());
+                logger.debug("任务详情: role={}, priority={}, estimatedDuration={}", 
+                    taskItem.getRole(), taskItem.getPriority(), taskItem.getEstimatedDuration());
+
                 // 查找对应角色的Agent
                 AgentRole role = AgentRole.valueOf(taskItem.getRole());
                 Agent agent = agentRepository.findByRole(role)
@@ -200,7 +217,9 @@ public class ProjectManagerAgent {
                             newAgent.setName(role.getDisplayName());
                             newAgent.setRole(role);
                             newAgent.setStatus(AgentStatus.IDLE);
-                            return agentRepository.save(newAgent);
+                            newAgent = agentRepository.save(newAgent);
+                            logger.info("成功创建新Agent: id={}, name={}", newAgent.getId(), newAgent.getName());
+                            return newAgent;
                         });
 
                 // 创建新任务
@@ -215,16 +234,27 @@ public class ProjectManagerAgent {
                     task.setEstimatedHours(taskItem.getEstimatedDuration());
                 }
 
-                Task savedTask = taskRepository.save(task);
-                createdTasks.add(savedTask);
-                logger.info("已创建任务: {}，ID: {}, 已分配给: {}", 
-                    task.getTitle(), savedTask.getId(), agent.getName());
+                try {
+                    Task savedTask = taskRepository.save(task);
+                    createdTasks.add(savedTask);
+                    logger.info("成功创建任务: id={}, title={}, assignedTo={}", 
+                        savedTask.getId(), savedTask.getTitle(), agent.getName());
+                } catch (Exception e) {
+                    logger.error("保存任务失败: {}", e.getMessage());
+                    throw new RuntimeException("保存任务失败", e);
+                }
 
                 // 更新Agent状态
-                agent.setStatus(AgentStatus.WORKING);
-                agent.setCurrentTask(taskItem.getTitle());
-                agentRepository.save(agent);
-                logger.debug("已更新Agent {} 的状态为: {}", agent.getName(), agent.getStatus());
+                try {
+                    agent.setStatus(AgentStatus.WORKING);
+                    agent.setCurrentTask(taskItem.getTitle());
+                    agent = agentRepository.save(agent);
+                    logger.info("已更新Agent状态: id={}, name={}, status={}, currentTask={}", 
+                        agent.getId(), agent.getName(), agent.getStatus(), agent.getCurrentTask());
+                } catch (Exception e) {
+                    logger.error("更新Agent状态失败: {}", e.getMessage());
+                    throw new RuntimeException("更新Agent状态失败", e);
+                }
             }
 
             // 设置任务依赖关系
@@ -265,16 +295,48 @@ public class ProjectManagerAgent {
     public void monitorTaskProgress() {
         try {
             logger.info("开始执行任务监控...");
-            // 只更新状态相关字段
+            
+            // 检查数据库连接
+            try {
+                long activeTaskCount = taskRepository.countByStatusNot(TaskStatus.COMPLETED);
+                logger.info("当前活动任务数量: {}", activeTaskCount);
+            } catch (Exception e) {
+                logger.error("检查活动任务数量失败: {}", e.getMessage());
+                throw new RuntimeException("数据库查询失败", e);
+            }
+
+            // 更新项目经理状态
             Agent agent = agentRepository.findById(projectManagerAgent.getId()).orElseThrow();
             agent.setStatus(AgentStatus.WORKING);
             agent.setCurrentTask("监控任务进度");
-            agentRepository.save(agent);
+            try {
+                agent = agentRepository.save(agent);
+                logger.info("已更新项目经理状态: status={}, currentTask={}", 
+                    agent.getStatus(), agent.getCurrentTask());
+            } catch (Exception e) {
+                logger.error("更新项目经理状态失败: {}", e.getMessage());
+                throw new RuntimeException("更新项目经理状态失败", e);
+            }
 
-            // 获取所有进行中的任务，使用JOIN FETCH预加载关联实体
-            List<Task> activeTasks = taskRepository.findActiveTasksWithAgents();
-            logger.info("当前有 {} 个活动任务需要监控", activeTasks.size());
-            
+            // 获取所有进行中的任务
+            List<Task> activeTasks;
+            try {
+                activeTasks = taskRepository.findActiveTasksWithAgents();
+                logger.info("成功获取活动任务列表，任务数量: {}", activeTasks.size());
+                
+                // 记录每个任务的详细信息
+                for (Task task : activeTasks) {
+                    logger.info("活动任务详情: id={}, title={}, status={}, assignedTo={}, progress={}%", 
+                        task.getId(), task.getTitle(), task.getStatus(),
+                        task.getAssignedAgent().getName(),
+                        task.getActualHours() != null && task.getEstimatedHours() != null ? 
+                            (task.getActualHours() * 100 / task.getEstimatedHours()) : 0);
+                }
+            } catch (Exception e) {
+                logger.error("获取活动任务列表失败: {}", e.getMessage());
+                throw new RuntimeException("获取任务列表失败", e);
+            }
+
             // 使用AI分析任务进度
             if (!activeTasks.isEmpty()) {
                 logger.debug("开始生成任务监控Prompt...");
@@ -295,27 +357,46 @@ public class ProjectManagerAgent {
                 // 获取项目经理的AI提供商并发送请求
                 logger.debug("正在使用AI分析任务进度...");
                 AIProvider providerObj = getAIProvider(projectManagerAgent);
-                String aiResponse = providerObj.generateResponse(monitoringPrompt, parameters)
-                        .get(); // 等待结果
-                logger.debug("AI分析完成，响应长度: {} 字符", aiResponse.length());
-                // TODO: 解析AI响应并更新任务状态
+                try {
+                    String aiResponse = providerObj.generateResponse(monitoringPrompt, parameters)
+                            .get(); // 等待结果
+                    logger.debug("AI分析完成，响应长度: {} 字符", aiResponse.length());
+                    // TODO: 解析AI响应并更新任务状态
+                } catch (InterruptedException e) {
+                    logger.error("AI分析任务被中断: {}", e.getMessage());
+                    Thread.currentThread().interrupt(); // 重新设置中断标志
+                    throw new RuntimeException("AI分析任务被中断", e);
+                } catch (ExecutionException e) {
+                    logger.error("AI分析任务执行失败: {}", e.getMessage());
+                    throw new RuntimeException("AI分析任务执行失败", e);
+                }
             } else {
                 logger.info("没有需要监控的活动任务");
             }
 
-            // 更新状态为空闲
-            agent = agentRepository.findById(projectManagerAgent.getId()).orElseThrow();
-            agent.setStatus(AgentStatus.IDLE);
-            agent.setCurrentTask(null);
-            agentRepository.save(agent);
-            logger.info("任务监控完成");
+            // 更新项目经理状态为空闲
+            try {
+                agent = agentRepository.findById(projectManagerAgent.getId()).orElseThrow();
+                agent.setStatus(AgentStatus.IDLE);
+                agent.setCurrentTask(null);
+                agent = agentRepository.save(agent);
+                logger.info("任务监控完成，项目经理已恢复空闲状态");
+            } catch (Exception e) {
+                logger.error("更新项目经理状态失败: {}", e.getMessage());
+                throw new RuntimeException("更新项目经理状态失败", e);
+            }
         } catch (Exception e) {
             logger.error("任务监控过程中发生错误: {}", e.getMessage(), e);
-            logger.error("错误详情: ", e);
-            Agent agent = agentRepository.findById(projectManagerAgent.getId()).orElseThrow();
-            agent.setStatus(AgentStatus.BLOCKED);
-            agent.setCurrentTask("监控错误：" + e.getMessage());
-            agentRepository.save(agent);
+            try {
+                Agent agent = agentRepository.findById(projectManagerAgent.getId()).orElseThrow();
+                agent.setStatus(AgentStatus.BLOCKED);
+                agent.setCurrentTask("监控错误：" + e.getMessage());
+                agentRepository.save(agent);
+                logger.info("已将项目经理状态更新为已阻塞");
+            } catch (Exception ex) {
+                logger.error("更新项目经理错误状态失败: {}", ex.getMessage());
+            }
+            throw new RuntimeException("任务监控失败", e);
         }
     }
 
