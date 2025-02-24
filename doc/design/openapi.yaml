@@ -58,9 +58,9 @@ components:
     RequirementRequest:
       type: object
       required:
-        - userBasicRequriement
+        - description
       properties:
-        userBasicRequriement:
+        description:
           type: string
           description: The detailed description of the requirement
           minLength: 10
