@@ -1,0 +1,65 @@
+# Application common configurations
+server:
+  port: 8082
+  servlet:
+    context-path: /dove-project
+
+spring:
+  application:
+    name: dove-project
+
+  # Database configuration
+  datasource:
+    url: jdbc:mariadb://${MARIADB_HOST:localhost}:${MARIADB_PORT:3306}/${MARIADB_DATABASE:dove_project}
+    username: ${MARIADB_USER:root}
+    password: ${MARIADB_PASSWORD:root}
+    driver-class-name: org.mariadb.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      idle-timeout: 300000
+      pool-name: ProjectHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  # JPA configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+        use_sql_comments: true
+
+  # i18n configuration
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# Logging configuration
+logging:
+  level:
+    com.doveaccelerator: INFO
+    org.springframework: WARN
+
+# Project specific configurations
+project:
+  thread-pool:
+    core-size: 5
+    max-size: 10
+    queue-capacity: 25
+    keep-alive-seconds: 60

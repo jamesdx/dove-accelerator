@@ -1,0 +1,178 @@
+version: '3.8'
+
+services:
+  # Nacos Service
+  nacos:
+    image: nacos/nacos-server:2.2.3
+    container_name: dove-nacos
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=mariadb
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_DB_NAME=nacos_config
+      - MYSQL_SERVICE_USER=root
+      - MYSQL_SERVICE_PASSWORD=root
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      - mariadb
+    networks:
+      - dove-network
+
+  # MariaDB Service
+  mariadb:
+    image: mariadb:10.11
+    container_name: dove-mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nacos_config
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - dove-network
+
+  # Redis Service
+  redis:
+    image: redis:7.2
+    container_name: dove-redis
+    command: redis-server --requirepass redis123
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - dove-network
+
+  # Elasticsearch Service
+  elasticsearch:
+    image: elasticsearch:8.12.1
+    container_name: dove-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=elastic123
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - dove-network
+
+  # Gateway Service
+  gateway:
+    build: 
+      context: .
+      dockerfile: dove-gateway/Dockerfile
+    container_name: dove-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_HOST=nacos
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=redis123
+    ports:
+      - "8080:8080"
+    depends_on:
+      - nacos
+      - redis
+    networks:
+      - dove-network
+
+  # Auth Service
+  auth:
+    build:
+      context: .
+      dockerfile: dove-auth/Dockerfile
+    container_name: dove-auth
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_HOST=nacos
+      - MARIADB_HOST=mariadb
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=redis123
+    depends_on:
+      - nacos
+      - mariadb
+      - redis
+    networks:
+      - dove-network
+
+  # Agent Service
+  agent:
+    build:
+      context: .
+      dockerfile: dove-agent/Dockerfile
+    container_name: dove-agent
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_HOST=nacos
+      - MARIADB_HOST=mariadb
+    depends_on:
+      - nacos
+      - mariadb
+    networks:
+      - dove-network
+
+  # Project Service
+  project:
+    build:
+      context: .
+      dockerfile: dove-project/Dockerfile
+    container_name: dove-project
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_HOST=nacos
+      - MARIADB_HOST=mariadb
+    depends_on:
+      - nacos
+      - mariadb
+    networks:
+      - dove-network
+
+  # Task Service
+  task:
+    build:
+      context: .
+      dockerfile: dove-task/Dockerfile
+    container_name: dove-task
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_HOST=nacos
+      - MARIADB_HOST=mariadb
+    depends_on:
+      - nacos
+      - mariadb
+    networks:
+      - dove-network
+
+  # Knowledge Service
+  knowledge:
+    build:
+      context: .
+      dockerfile: dove-knowledge/Dockerfile
+    container_name: dove-knowledge
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - NACOS_HOST=nacos
+      - MARIADB_HOST=mariadb
+      - ELASTICSEARCH_URI=elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic123
+    depends_on:
+      - nacos
+      - mariadb
+      - elasticsearch
+    networks:
+      - dove-network
+
+volumes:
+  mariadb_data:
+  redis_data:
+  elasticsearch_data:
+
+networks:
+  dove-network:
+    driver: bridge

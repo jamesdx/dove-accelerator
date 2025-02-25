@@ -1,0 +1,38 @@
+# Development environment specific configurations
+server:
+  port: 8082
+
+spring:
+  # Database configuration for development
+  datasource:
+    url: jdbc:mariadb://localhost:3306/dove_project_dev
+    username: root
+    password: root
+
+  # JPA development configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  # Dev Tools
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+# Logging configuration for development
+logging:
+  level:
+    com.doveaccelerator: DEBUG
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# Management endpoints for development
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

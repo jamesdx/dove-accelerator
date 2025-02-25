@@ -1,0 +1,40 @@
+sequenceDiagram
+    participant C as Client
+    participant G as API Gateway
+    participant AM as AgentManagementService
+    participant PM as ProjectManagementService
+    participant TM as TaskManagementService
+    participant LLM as LLMAdapter
+    participant KB as KnowledgeBase
+    participant DB as Database
+
+    %% 项目初始化流程
+    C->>G: 创建新项目请求
+    G->>PM: 转发项目创建请求
+    PM->>DB: 保存项目信息
+    PM->>AM: 请求创建AI团队
+    AM->>KB: 获取角色知识库
+    KB-->>AM: 返回角色要求
+    AM->>LLM: 初始化各角色Agent
+    LLM-->>AM: 返回Agent初始化结果
+    AM->>DB: 保存Agent信息
+    AM-->>PM: 返回团队创建结果
+    PM-->>G: 返回项目创建结果
+    G-->>C: 返回完整响应
+
+    %% 任务执行流程
+    C->>G: 提交需求任务
+    G->>TM: 转发任务请求
+    TM->>AM: 获取可用Agent
+    AM-->>TM: 返回Agent列表
+    TM->>LLM: 分发任务到产品经理Agent
+    LLM->>KB: 查询相关知识
+    KB-->>LLM: 返回知识内容
+    LLM-->>TM: 返回需求分析结果
+    TM->>DB: 保存任务分解结果
+    TM->>AM: 分配子任务到其他Agent
+    AM->>LLM: 执行具体任务
+    LLM-->>AM: 返回执行结果
+    AM-->>TM: 更新任务状态
+    TM-->>G: 返回任务执行状态
+    G-->>C: 返回完整响应

@@ -1,0 +1,89 @@
+# Application common configurations
+server:
+  port: 8080
+  
+spring:
+  application:
+    name: dove-gateway
+    
+  # Redis configuration for rate limiting
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: 0
+    
+  # Gateway configuration
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters:
+        - StripPrefix=1
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 50
+            redis-rate-limiter.burstCapacity: 100
+            redis-rate-limiter.requestedTokens: 1
+            key-resolver: "#{@ipKeyResolver}"
+      routes:
+        - id: auth-service
+          uri: lb://dove-auth
+          predicates:
+            - Path=/dove-auth/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                
+        - id: agent-service
+          uri: lb://dove-agent
+          predicates:
+            - Path=/dove-agent/**
+            
+        - id: project-service
+          uri: lb://dove-project
+          predicates:
+            - Path=/dove-project/**
+            
+        - id: task-service
+          uri: lb://dove-task
+          predicates:
+            - Path=/dove-task/**
+            
+        - id: knowledge-service
+          uri: lb://dove-knowledge
+          predicates:
+            - Path=/dove-knowledge/**
+
+# Circuit breaker configuration
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 100
+      permittedNumberOfCallsInHalfOpenState: 10
+      waitDurationInOpenState: 10000
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,gateway
+  endpoint:
+    health:
+      show-details: always
+      
+# Logging configuration
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    org.springframework.http.server.reactive: INFO
+    org.springframework.web.reactive: INFO
+    reactor.netty: INFO
+    redisratelimiter: INFO

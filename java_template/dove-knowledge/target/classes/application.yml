@@ -1,0 +1,74 @@
+# Application common configurations
+server:
+  port: 8085
+  servlet:
+    context-path: /dove-knowledge
+
+spring:
+  application:
+    name: dove-knowledge
+
+  # Database configuration
+  datasource:
+    url: jdbc:mariadb://${MARIADB_HOST:localhost}:${MARIADB_PORT:3306}/${MARIADB_DATABASE:dove_knowledge}
+    username: ${MARIADB_USER:root}
+    password: ${MARIADB_PASSWORD:root}
+    driver-class-name: org.mariadb.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      idle-timeout: 300000
+      pool-name: KnowledgeHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  # JPA configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+        use_sql_comments: true
+
+  # Elasticsearch configuration
+  elasticsearch:
+    uris: ${ELASTICSEARCH_URI:localhost:9200}
+    username: ${ELASTICSEARCH_USERNAME:elastic}
+    password: ${ELASTICSEARCH_PASSWORD:elastic}
+
+# Embedding configuration
+embedding:
+  provider: openai
+  model: text-embedding-3-small
+  dimension: 384
+  similarity-threshold: 0.8
+  providers:
+    openai:
+      api-endpoint: ${OPENAI_API_ENDPOINT:https://api.openai.com/v1}
+      api-key: ${OPENAI_API_KEY:your-api-key}
+      model: text-embedding-3-small
+    huggingface:
+      api-endpoint: ${HUGGINGFACE_API_ENDPOINT:https://api-inference.huggingface.co}
+      api-key: ${HUGGINGFACE_API_KEY:your-api-key}
+      model: sentence-transformers/all-mpnet-base-v2
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# Logging configuration
+logging:
+  level:
+    com.doveaccelerator: INFO
+    org.springframework: WARN
+    org.elasticsearch: INFO
