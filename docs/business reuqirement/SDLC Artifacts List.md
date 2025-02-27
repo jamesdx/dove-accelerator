@@ -4,18 +4,23 @@
     - Responsible Party: Account Manager, Project Manager, Business Analyst
     - Inputs: Initial customer communication, business needs assessment.
     - Outputs: Project charter, high-level budget, initial timeline.
+    - **Reviewers:** Steering Committee, Project Sponsor
 - Artifact: Preliminary requirements document (often high-level)
     - Responsible Party: Business Analyst, Product Owner
     - Inputs: Customer discussions, initial project charter.
     - Outputs: High-level requirements, scope definition.
+    - **Reviewers:** Product Owner, Stakeholders
 - Artifact: User Story Mapping
     - Responsible Party: Product Owner, Business Analyst, Development Team
     - Inputs: Preliminary requirements, customer feedback.
     - Outputs: Visual representation of user stories and scope.
+    - **Reviewers:** Product Owner, Development Team Lead
 - Artifact: Business Architecture (High-Level) document
     - Responsible Party: Enterprise Architect, Business Analyst
     - Inputs: Customer business context, high-level requirements.
     - Outputs: High-level business model, process flows.
+    - **Reviewers:** Enterprise Architect, Business Stakeholders
+
 
 ### Phase 2: Design and Architecture    
 
@@ -23,70 +28,88 @@
     - Responsible Party: Solution Architect, Enterprise Architect
     - Inputs: High-level requirements, business architecture, NFRs.
     - Outputs: High-level system design, alignment across teams.
+    - **Reviewers:** Steering Committee, Technical Leads, Enterprise Architect
 - Artifact: System Architecture document (living document)
     - Responsible Party: Software Architect, Technical Lead
     - Inputs: Solution architecture, detailed requirements, NFRs.
     - Outputs: System component diagrams, technology stack decisions, API specifications.
+    - **Reviewers:** Software Architect, Technical Leads, Database Architect, Security Architect
 - Artifact: Application Architecture document (living document)
     - Responsible Party: Software Architect, Application Developers
     - Inputs: System architecture, detailed design specifications.
     - Outputs: Component diagrams, class diagrams, internal API specifications.
+    - **Reviewers:** Software Architect, Technical Leads, Developers
 - Artifact: Data Architecture document
     - Responsible Party: Data Architect, Database Administrator
     - Inputs: System architecture, application architecture, data models.
     - Outputs: Data models, database schema designs.
+    - **Reviewers:** Data Architect, Database Administrator, Technical Leads
 - Artifact: Database schema design
     - Responsible Party: Database Administrator, Data Architect
     - Inputs: Data model, data architecture document.
     - Outputs: Database schema.
+    - **Reviewers:** Data Architect, Database Administrator
 - Artifact: Security Design documents
     - Responsible Party: Security Architect, Security Engineer
     - Inputs: System architecture, application architecture, security requirements.
     - Outputs: Authentication and authorization plans, encryption strategy, security guidelines.
+    - **Reviewers:** Security Architect, Security Engineer, Software Architect
 - Artifact: Integration Architecture document
     - Responsible Party: Integration Architect, Software Architect
     - Inputs: System architecture, external system specifications, API specifications.
     - Outputs: Integration plan, API contracts.
+    - **Reviewers:** Integration Architect, Software Architect, Technical Leads
 - Artifact: API specifications
     - Responsible Party: API developer, Software Architect
     - Inputs: System architecture, integration architecture.
     - Outputs: Detailed specifications of APIs.
+    - **Reviewers:** Software Architect, API Developers, Integration Architect
 - Artifact: Deployment Architecture document (high-level)
     - Responsible Party: DevOps Engineer, Operations Engineer
     - Inputs: System architecture, infrastructure architecture.
     - Outputs: High-level deployment plan, environment configuration.
+    - **Reviewers:** DevOps Engineer, Operations Engineer, Technical Leads
 - Artifact: Infrastructure Architecture document (living document)
     - Responsible Party: DevOps Engineer, Cloud Engineer
     - Inputs: Deployment architecture, infrastructure requirements.
     - Outputs: Infrastructure design, IaC scripts.
+    - **Reviewers:** DevOps Engineer, Cloud Engineer, Operations Engineer
 - Artifact: Infrastructure as Code (IaC) plan
     - Responsible Party: DevOps Engineer
     - Inputs: Infrastructure architecture document, tools.
     - Outputs: IaC code, automated infrastructure deployment capability.
+    - **Reviewers:** DevOps Engineer, Infrastructure Engineer
 - Artifact: CI/CD pipeline definition
     - Responsible Party: DevOps Engineer
     - Inputs: Deployment architecture, tools, infrastructure.
     - Outputs: Automated pipeline configuration.
+    - **Reviewers:** DevOps Engineer, Development Team Lead, Operations Engineer
 - Artifact: UI/UX design documents
     - Responsible Party: UX/UI Designer
     - Inputs: User stories, application architecture.
     - Outputs: Wireframes, mockups, design specifications.
+    - **Reviewers:** UX/UI Designer, Product Owner, Development Team Lead
 - Artifact: Detailed component specifications
     - Responsible Party: Software Developers, Technical Lead
     - Inputs: System and Application architecture documents.
     - Outputs: Detailed design documents for each component.
+    - **Reviewers:** Technical Lead, Senior Developers
 - Artifact: Flowcharts and process diagrams
     - Responsible Party: Software Developers, Technical Lead
     - Inputs: Detailed design specifications.
     - Outputs: Visual representation of system behavior.
+    - **Reviewers:** Technical Lead, Senior Developers
 - Artifact: Mockups and wireframes
     - Responsible Party: UI/UX Designer
     - Inputs: User stories, UI/UX design documents.
     - Outputs: Interactive UI prototypes.
+    - **Reviewers:** UX/UI Designer, Product Owner
 - Artifact: Business Architecture document (refined)
     - Responsible Party: Business Analyst, Product Owner
     - Inputs: Initial Business Architecture, Detailed Requirements.
     - Outputs: Refined business model, updated process flows.
+    - **Reviewers:** Product Owner, Business Stakeholders
+
 
 ### Phase 3: Development and Construction
 
@@ -94,109 +117,138 @@
     - Responsible Party: Software Developers
     - Inputs: Detailed design specifications, application architecture.
     - Outputs: Working code for the system.
+    - **Reviewers:** Peer Developers, Technical Lead
 - Artifact: Code review reports
     - Responsible Party: Code reviewers, developers.
     - Inputs: Source code.
     - Outputs: Feedback and suggestions for improvements.
+    - **Reviewers:** N/A (report documents the review)
 - Artifact: Unit test code
     - Responsible Party: Developers
     - Inputs: Component design specifications.
     - Outputs: Unit tests for individual components.
+    - **Reviewers:** Peer Developers, QA Engineer
 - Artifact: Unit test reports
     - Responsible Party: Developers, QA
     - Inputs: Unit test code.
     - Outputs: Unit test results.
+    - **Reviewers:** QA Lead, Development Team Lead
 - Artifact: Code coverage reports
     - Responsible Party: Developers, QA
     - Inputs: Unit test results.
     - Outputs: Metrics on code coverage by unit tests.
+    - **Reviewers:** QA Lead, Development Team Lead
+
 ### Phase 4: Testing and Integration
 
 - Artifact: Integration test cases
     - Responsible Party: QA Engineers, Developers
     - Inputs: System Architecture, Component specifications, Integration Architecture.
     - Outputs: Integration test cases and scripts.
+    - **Reviewers:** QA Lead, Developers
 - Artifact: Integration test reports
     - Responsible Party: QA Engineers
     - Inputs: Integration test cases, execution results.
     - Outputs: Integration testing reports and bug reports.
+    - **Reviewers:** QA Lead, Development Team Lead
 - Artifact: CI/CD pipeline configuration
     - Responsible Party: DevOps Engineer
     - Inputs: System Architecture, Deployment Architecture.
     - Outputs: Configured CI/CD pipeline.
+    - **Reviewers:** DevOps Engineer, Development Team Lead, Operations Engineer
 - Artifact: System test cases
     - Responsible Party: QA Engineers, Testers
     - Inputs: System Architecture, Requirements document.
     - Outputs: System test cases and scripts.
+    - **Reviewers:** QA Lead, Testers
 - Artifact: System test reports
     - Responsible Party: QA Engineers
     - Inputs: System test cases and results.
     - Outputs: Summary reports, bug reports.
+    - **Reviewers:** QA Lead, Development Team Lead
 - Artifact: UAT test cases
     - Responsible Party: Customer, QA Engineers
     - Inputs: Requirements documents, user stories.
     - Outputs: Customer test cases and execution plan.
+    - **Reviewers:** Product Owner, QA Lead
 - Artifact: UAT feedback reports
     - Responsible Party: Customer, QA Engineers
     - Inputs: UAT test results, customer feedback.
     - Outputs: Feedback reports and issue logs.
+    - **Reviewers:** Product Owner, Project Manager, Development Team Lead
 - Artifact: UAT sign-off document
     - Responsible Party: Customer, Project Manager
     - Inputs: UAT feedback reports.
     - Outputs: Formal acceptance of the system.
+    - **Reviewers:** Project Sponsor, Steering Committee
+
 ### Phase 5: Deployment and Operations
 
 - Artifact: Deployment plan
     - Responsible Party: DevOps Engineers, Operations Team
     - Inputs: Deployment Architecture, System Architecture.
     - Outputs: Detailed steps to deploy the software.
+    - **Reviewers:** DevOps Lead, Operations Manager
 - Artifact: Deployment log
     - Responsible Party: DevOps Engineers, System Admins
     - Inputs: Deployment actions, automation scripts.
     - Outputs: Record of the deployment.
+    - **Reviewers:** DevOps Lead, Operations Manager
 - Artifact: Post-deployment verification report
     - Responsible Party: DevOps Engineers, Operations Team
     - Inputs: Post-deployment checks, monitoring data.
     - Outputs: Confirmation of successful deployment.
+    - **Reviewers:** DevOps Lead, Operations Manager
 - Artifact: Automated deployment pipeline
     - Responsible Party: DevOps Engineers
     - Inputs: CI/CD tools, deployment scripts.
     - Outputs: Automated deployment capability.
+    - **Reviewers:** DevOps Lead, Development Team Lead
 - Artifact: Monitoring dashboards
     - Responsible Party: Operations Team, DevOps Engineers
     - Inputs: Monitoring tools, system metrics.
     - Outputs: Real-time view of system performance and health.
+    - **Reviewers:** Operations Manager, DevOps Lead
 - Artifact: Incident reports
     - Responsible Party: Operations Team
     - Inputs: System alerts, error logs.
     - Outputs: Documentation of incidents and resolutions.
+    - **Reviewers:** Operations Manager, DevOps Lead
 - Artifact: Maintenance logs
     - Responsible Party: Operations Team
     - Inputs: Maintenance activities.
     - Outputs: Record of maintenance tasks.
+    - **Reviewers:** Operations Manager
 - Artifact: Observability metrics
     - Responsible Party: Operations Team, DevOps Engineers
     - Inputs: System monitoring data, logs.
     - Outputs: Comprehensive metrics for system behavior and performance.
+    - **Reviewers:** Operations Manager, DevOps Lead
+
 ### Phase 6: Maintenance and Evolution
 
 - Artifact: Bug fix releases
     - Responsible Party: Developers, Release Manager
     - Inputs: Bug reports, code changes.
     - Outputs: Updated software releases.
+    - **Reviewers:** QA Lead, Development Team Lead, Release Manager
 - Artifact: Security patches
     - Responsible Party: Security Engineers, Release Manager
     - Inputs: Security vulnerabilities, patch code.
     - Outputs: Updated software releases with security fixes.
+    - **Reviewers:** Security Engineer, Release Manager
 - Artifact: Customer support logs
     - Responsible Party: Support Engineers
     - Inputs: Customer support requests.
     - Outputs: Records of customer issues and resolutions.
+    - **Reviewers:** Support Lead
 - Artifact: New feature releases
     - Responsible Party: Developers, Release Manager
     - Inputs: Completed new features, test results.
     - Outputs: New software releases with new features.
+    - **Reviewers:** QA Lead, Product Owner, Release Manager
 - Artifact: Major upgrade releases
     - Responsible Party: Developers, Release Manager
     - Inputs: Completed major changes, test results.
     - Outputs: New software releases with significant upgrades.
+    - **Reviewers:** QA Lead, Product Owner, Release Manager, Steering Committee
