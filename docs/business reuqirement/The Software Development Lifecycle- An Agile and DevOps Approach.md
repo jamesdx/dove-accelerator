@@ -21,7 +21,7 @@ This document outlines the typical workflow and responsibilities of a software d
         *   Initial project charter or business case.
         *   Preliminary requirements document (often high-level).
         *   **User Story Mapping**.
-        * **Business Architecture (High-Level)**: to define the business.
+        *   **Business Architecture (High-Level)**: to define the business.
     *   **Roles:** Account Managers, Business Analysts, Product Managers, Product Owners, Stakeholders.
 
 2.  **Requirements Elicitation, Analysis, and Prioritization:**
@@ -65,11 +65,11 @@ This document outlines the typical workflow and responsibilities of a software d
 **Phase 2: Design and Architecture (Agile and DevOps Focus)**
 
 1.  **Solution Architecture:**
-    *   **Description:** Provides a holistic view of how all architectural elements will work together to address the customer's needs.  A high-level blueprint.
+    *   **Description:** Provides a holistic view of how all architectural elements will work together to address the customer's needs. A high-level blueprint.
     *   **Agile Emphasis:** Guides the technical design and serves as a reference for subsequent iterations. This is a high-level vision to keep all teams aligned.
-    * **DevOps Emphasis**: The architecture should be flexible enough to support the DevOps.
+    *   **DevOps Emphasis**: The architecture should be flexible enough to support the DevOps.
     *   **Activities:**
-        * Define how the  Business Architecture, System Architecture, Application Architecture, Data Architecture, Security Architecture, Integration Architecture, Infrastructure Architecture, and Deployment Architecture  will be together.
+        *   Define how the  Business Architecture, System Architecture, Application Architecture, Data Architecture, Security Architecture, Integration Architecture, Infrastructure Architecture, and Deployment Architecture  will be together.
     *   **Deliverables:** Solution Architecture document (living document).
     *   **Roles:** Solution Architect, Enterprise Architect.
 
@@ -90,7 +90,7 @@ This document outlines the typical workflow and responsibilities of a software d
         *   Data model and database schema.
         *   API specifications.
         *   Security design documents.
-        *   **Infrastructure as Code (IaC)**.
+        *   **Infrastructure as Code (IaC) plan**.
     *   **Roles:** Software Architects, Technical Leads, Senior Developers, Database Architects, Security Architects, DevOps Engineers.
 
 3.  **Detailed Design and Application Architecture:**
@@ -103,93 +103,103 @@ This document outlines the typical workflow and responsibilities of a software d
         *   Creating mockups and wireframes.
         *   Refining the interface specification.
         *   **Collaborative design workshop**.
-        *  Define the structure of each application.
+        *   Define the structure of each application.
     *   **Deliverables:**
         *   UI/UX design documents.
         *   Detailed component specifications.
         *   Flowcharts and process diagrams.
         *   Mockups and wireframes.
-        * **Application architecture document**.
+        *   **Application architecture document**.
     *   **Roles:** UI/UX Designers, Software Developers, Technical Leads, Product Owners.
 
-4. **Data Architecture**:
-    * **Description**: Define how the data will be structured, stored, accessed, and managed.
-    * **Agile Emphasis**: Support the iterative change of the database.
-    * **DevOps emphasis**: support the data backup and migration.
-    * **Activities**:
-       * Define the data model (Entity-Relationship Diagrams).
-       * Define the database schemas.
-       * Select the data storage technologies.
-       * Define the data integration strategy.
-    * **Deliverables**:
-      * Data architecture document.
-    * **Roles**: Data Architect, Database Administrator, Technical Leads.
+4.  **Data Architecture**:
+    *   **Description**: Define how the data will be structured, stored, accessed, and managed.
+    *   **Agile Emphasis**: Support the iterative change of the database.
+    *   **DevOps emphasis**: support the data backup and migration.
+    *   **Activities**:
+        *   Define the data model (Entity-Relationship Diagrams).
+        *   Define the database schemas.
+        *   Select the data storage technologies.
+        *   Define the data integration strategy.
+    *   **Deliverables**:
+        *   Data architecture document.
+    *   **Roles**: Data Architect, Database Administrator, Technical Leads.
 
-5. **Security Architecture**:
-   * **Description**: It define how to make sure the system secure.
-   * **Agile Emphasis**: Security should be considered from the very start (shift-left security).
-   * **DevOps emphasis**: automate the security check.
-   * **Activities**:
-      * Define the Authentication and authorization mechanism.
-      * Define the data encryption.
-      * Define the security process.
-   * **Deliverables**:
-       * Security design documents.
-   * **Roles**: Security Architect, Software Architect.
+5.  **Security Architecture**:
+    *   **Description**: It define how to make sure the system secure.
+    *   **Agile Emphasis**: Security should be considered from the very start (shift-left security).
+    *   **DevOps emphasis**: automate the security check.
+    *   **Activities**:
+        *   Define the Authentication and authorization mechanism.
+        *   Define the data encryption.
+        *   Define the security process.
+    *   **Deliverables**:
+        *   Security design documents.
+    *   **Roles**: Security Architect, Software Architect.
 
-6. **Integration Architecture**:
-   * **Description**: It defines how the software system will interact with other internal or external systems.
-   * **Agile Emphasis**: API need to be designed well, and the system need to be easy to integrate.
-   * **DevOps emphasis**: the system will be easily to integrate.
-   * **Activities**:
-     * Define the API design.
-     * Define the Messaging system.
-     * Define the Data format.
-     * Define the Data transfer strategy.
-     * Define the Dependency.
-     * Define the Error handle.
-   * **Deliverables**:
-      * Integration Architecture document.
-   * **Roles**: Integration Architect, Software Architect.
+6.  **Integration Architecture**:
+    *   **Description**: It defines how the software system will interact with other internal or external systems.
+    *   **Agile Emphasis**: API need to be designed well, and the system need to be easy to integrate.
+    *   **DevOps emphasis**: the system will be easily to integrate.
+    *   **Activities**:
+        *   Define the API design.
+        *   Define the Messaging system.
+        *   Define the Data format.
+        *   Define the Data transfer strategy.
+        *   Define the Dependency.
+        *   Define the Error handle.
+    *   **Deliverables**:
+        *   Integration Architecture document.
+    *   **Roles**: Integration Architect, Software Architect.
 
-7. **Deployment Architecture**:
-    * **Description**: Defines how the software will be packaged, deployed, and updated in the target environments.
-    * **Agile Emphasis**: The system should be support for automatic deployment.
-    * **DevOps emphasis**: The CI/CD pipeline.
-    * **Activities**:
-       * Define the Deployment topology.
-       * Define the Deployment tools and technologies.
-       * Define the Environment configuration.
-       * Define the Rollback procedures.
-       * Define the Database migration.
-   * **Deliverables**:
-      * Deployment Architecture document.
-   * **Roles**: DevOps Engineer, Operation Engineer, Software Architect.
+7.  **Deployment Architecture**:
+    *   **Description**: Defines how the software will be packaged, deployed, and updated in the target environments.
+    *   **Agile Emphasis**: The system should be support for automatic deployment.
+    *   **DevOps emphasis**: The CI/CD pipeline.
+    *   **Activities**:
+        *   Define the Deployment topology.
+        *   **Select the Deployment tools and technologies** (e.g., Kubernetes, Docker, etc.).
+        *   **Define the Environment configuration**.
+        *   Define the Rollback procedures.
+        * Define the Database migration.
+        * **Setup the development, test environment**.
+    *   **Deliverables**:
+        *   Deployment Architecture document.
+        *  **Initial configuration for development and testing environment.**
+    *   **Roles**: DevOps Engineer, Operation Engineer, Software Architect.
 
-8. **Infrastructure Architecture**:
-    * **Description**: define the infrastructure for the system.
-    * **Agile emphasis**: the infrastructure need to be flexible.
-    * **DevOps emphasis**: Infrastructure as Code.
-    * **Activities**:
-        * Define the cloud or on-premise.
-        * Define the Network design.
-        * Define the Storage solutions.
-    * **Deliverables**:
-      * Infrastructure Architecture document.
-    * **Roles**: DevOps Engineer, Operation Engineer, Software Architect.
+8.  **Infrastructure Architecture**:
+    *   **Description**: Define the infrastructure for the system.
+    *   **Agile emphasis**: the infrastructure need to be flexible.
+    *   **DevOps emphasis**: Infrastructure as Code.
+    *   **Activities**:
+        *   Define the cloud or on-premise.
+        *   Define the Network design.
+        *   Define the Storage solutions.
+        * **Select tools to support CI/CD (e.g., Git, Jenkins, Maven, Docker)**.
+        * **Setup the initial code repository and CI/CD pipeline**.
+    *   **Deliverables**:
+        *   Infrastructure Architecture document.
+        * **CI/CD pipeline definition**.
+    *   **Roles**: DevOps Engineer, Operation Engineer, Software Architect.
 
-9. **Business Architecture (Refined)**:
-    * **Description**: Refine the business architecture based on the system.
-    * **Agile Emphasis**: Support the requirement update.
-    * **Activities**:
-        * Update the business model.
-        * Update the business process.
-        * Update the business rule.
-    * **Deliverables**:
-      * Business Architecture document.
-    * **Roles**: Business Analyst, Product Owner, Enterprise Architect.
+9.  **Business Architecture (Refined)**:
+    *   **Description**: Refine the business architecture based on the system.
+    *   **Agile Emphasis**: Support the requirement update.
+    *   **Activities**:
+        *   Update the business model.
+        *   Update the business process.
+        *   Update the business rule.
+    *   **Deliverables**:
+        *   Business Architecture document.
+    *   **Roles**: Business Analyst, Product Owner, Enterprise Architect.
 
 **Phase 3: Development and Construction (Agile and DevOps Focus)**
+
+*  **Setup the Environment**:
+     * The developer and devops will work together to create the environment.
+     * The devops will help developer to setup the develop tool.
+    * The git, maven, docker repository will be ready.
 
 1.  **Coding and Implementation:**
     *   **Description:** Writing the actual code for the software system in short sprints, based on the design specifications.
@@ -203,6 +213,7 @@ This document outlines the typical workflow and responsibilities of a software d
         *   Using version control (e.g., Git).
         *   **Pair Programming or Mob Programming**
         *   **Daily Standup Meeting**.
+        *   **Using the development environment**
     *   **Deliverables:**
         *   Source code.
         *   Code review reports.
@@ -217,7 +228,7 @@ This document outlines the typical workflow and responsibilities of a software d
         *   Running unit tests.
         *   Debugging and fixing issues.
         *   Generating test coverage reports.
-        *   **Automating unit testing**.
+        *   **Automating unit testing using CI**.
     *   **Deliverables:**
         *   Unit test code.
         *   Unit test reports.
@@ -231,7 +242,7 @@ This document outlines the typical workflow and responsibilities of a software d
     *   **Agile Emphasis:** Frequent integration and testing ensure that the team is always working on a potentially shippable product increment.
     *   **DevOps Emphasis:** Continuous Integration (CI) is a core DevOps practice.
     *   **Activities:**
-        *   Implementing a CI/CD pipeline.
+        *   **Using the CI/CD pipeline**.
         *   Developing and executing automated integration test cases.
         *   Identifying and fixing integration issues.
         *   **Run integration test in the CI pipeline**.
@@ -282,7 +293,8 @@ This document outlines the typical workflow and responsibilities of a software d
         *   Configuring the system.
         *   Performing post-deployment verification.
         *   Implementing rollback procedures.
-        *   **Define the infrastructure as code**.
+        *   **Use the defined infrastructure as code**.
+        * **Use the CI/CD pipeline**.
     *   **Deliverables:**
         *   Deployment plan.
         *   Deployment log.
@@ -341,6 +353,8 @@ This document outlines the typical workflow and responsibilities of a software d
         *   New feature releases.
         *   Major upgrade releases.
     *   **Roles:** Product Owners, Business Analysts, Developers, Architects, Scrum Master.
+
+
 
 **Key Principles and Considerations:**
 *   **Collaboration:** Effective collaboration between customers, developers, testers, operations, and other stakeholders is crucial throughout the SDLC. **(Agile & DevOps)**

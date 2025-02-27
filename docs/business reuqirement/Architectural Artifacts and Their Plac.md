@@ -60,7 +60,7 @@ Yes, in addition to the Business, Technical, Data, Security, Operations, Integra
 - When: Phase 2, System Architecture and Design.
 - Deliverables: Integration Architecture document.
 - Roles: Integration Architect, Software Architect.
-### Deployment Architecture:
+### Deployment Architecture
 
 - Description: Defines how the software will be packaged, deployed, and updated in the target environments (e.g., development, testing, staging, production). It provides a view of how the various components of the system will be deployed and connected.
 - Why it is important: The goal is to ensure that the system can be deployed smoothly, reliably, and repeatedly.
