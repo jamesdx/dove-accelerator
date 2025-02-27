@@ -1,6 +1,5 @@
 package com.doveaccelerator.common.util;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.UUID;
 import java.util.regex.Pattern;
 

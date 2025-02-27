@@ -56,10 +56,19 @@ public class PromptEngineConfig {
     }
 
     public Map<String, Object> getEngineParameters() {
+        if (template == null) {
+            return new HashMap<>();
+        }
         return template.getEngineParameters();
     }
 
     public void setMetricWeight(String metric, Double weight) {
+        if (evaluation == null) {
+            evaluation = new EvaluationConfig();
+        }
+        if (evaluation.getMetricWeights() == null) {
+            evaluation.setMetricWeights(new HashMap<>());
+        }
         evaluation.getMetricWeights().put(metric, weight);
     }
 }
